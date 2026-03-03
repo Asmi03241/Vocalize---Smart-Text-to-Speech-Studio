@@ -1,0 +1,6 @@
+flask
+edge-tts
+deep-translator
+pyttsx3
+gtts
+gunicorn

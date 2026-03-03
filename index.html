@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocalize — Smart Text to Speech Studio</title>
+    <meta name="description"
+        content="Vocalize is a smart text-to-speech studio that converts text to audio in multiple languages with offline and online modes.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="page">
+
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M12 3C10.3 3 9 4.3 9 6V12C9 13.7 10.3 15 12 15C13.7 15 15 13.7 15 12V6C15 4.3 13.7 3 12 3Z"
+                            fill="white" />
+                        <path
+                            d="M19 12C19 15.9 15.9 19 12 19C8.1 19 5 15.9 5 12H3C3 16.9 6.5 21 11 21.9V24H13V21.9C17.5 21 21 16.9 21 12H19Z"
+                            fill="white" />
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <span class="title">Vocalize</span>
+                    <span class="separator">|</span>
+                    <span class="subtitle">Smart Text to Speech Studio</span>
+                </div>
+            </div>
+
+            <button id="themeToggle" class="theme-btn" title="Toggle theme" aria-label="Toggle theme">
+                <span id="themeIcon">🌙</span>
+            </button>
+        </header>
+
+        <!-- Main layout -->
+        <div class="main-card">
+
+            <!-- Left column: editor + controls -->
+            <div class="editor-col">
+
+                <div class="textarea-wrap">
+                    <textarea id="textInput" placeholder="Type or paste your text here..." spellcheck="true"
+                        aria-label="Text input"></textarea>
+                </div>
+                <div class="word-count">Words: <span id="wordCount">0</span></div>
+
+                <!-- Controls grid -->
+                <div class="control-grid">
+
+                    <!-- Voice + Speed -->
+                    <div class="glass-card">
+                        <label for="voice">Voice</label>
+                        <select id="voice" aria-label="Select voice">
+                            <option value="female">Female</option>
+                            <option value="male">Male</option>
+                        </select>
+
+                        <label for="speed">Speed <span id="speedVal">150</span></label>
+                        <div class="slider-wrap">
+                            <span class="slider-label">100</span>
+                            <input type="range" id="speed" min="100" max="300" value="150" aria-label="Speech speed">
+                            <span class="slider-label">300</span>
+                        </div>
+                    </div>
+
+                    <!-- Language + Mode -->
+                    <div class="glass-card">
+                        <label for="language">Language</label>
+                        <select id="language" aria-label="Select language">
+                            <option value="en">English</option>
+                            <option value="hi">Hindi</option>
+                            <option value="mr">Marathi</option>
+                            <option value="fr">French</option>
+                            <option value="es">Spanish</option>
+                            <option value="de">German</option>
+                            <option value="ja">Japanese</option>
+                            <option value="zh-CN">Chinese</option>
+                            <option value="ar">Arabic</option>
+                        </select>
+
+
+                        <label for="volume">Volume <span id="volumeVal">80</span>%</label>
+                        <div class="slider-wrap">
+                            <span class="slider-label">0</span>
+                            <input type="range" id="volume" min="0" max="100" value="80" aria-label="Speech volume">
+                            <span class="slider-label">100</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Actions -->
+                <div class="actions">
+                    <button id="speakBtn" class="btn btn-primary" aria-label="Speak text">
+                        <svg viewBox="0 0 24 24" fill="none" class="btn-icon">
+                            <path
+                                d="M12 3C10.3 3 9 4.3 9 6V12C9 13.7 10.3 15 12 15C13.7 15 15 13.7 15 12V6C15 4.3 13.7 3 12 3Z"
+                                fill="currentColor" />
+                            <path
+                                d="M19 12C19 15.9 15.9 19 12 19C8.1 19 5 15.9 5 12H3C3 16.9 6.5 21 11 21.9V24H13V21.9C17.5 21 21 16.9 21 12H19Z"
+                                fill="currentColor" />
+                        </svg>
+                        Speak
+                    </button>
+                    <button id="downloadBtn" class="btn btn-secondary" aria-label="Download audio">
+                        <svg viewBox="0 0 24 24" fill="none" class="btn-icon">
+                            <path d="M12 16L7 11H10V4H14V11H17L12 16Z" fill="currentColor" />
+                            <path d="M5 18H19V20H5V18Z" fill="currentColor" />
+                        </svg>
+                        Download
+                    </button>
+                    <button id="clearBtn" class="btn btn-ghost" aria-label="Clear text">
+                        <svg viewBox="0 0 24 24" fill="none" class="btn-icon">
+                            <path d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z" fill="currentColor" />
+                        </svg>
+                        Clear
+                    </button>
+                    <button id="translateBtn" class="btn btn-outline" aria-label="Translate and speak">
+                        <svg viewBox="0 0 24 24" fill="none" class="btn-icon">
+                            <path
+                                d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"
+                                fill="currentColor" />
+                        </svg>
+                        Translate
+                    </button>
+                </div>
+
+                <!-- Upload -->
+                <div class="upload-row">
+                    <label class="upload-btn" for="fileUpload">
+                        <svg viewBox="0 0 24 24" fill="none" class="btn-icon">
+                            <path d="M9 16H15V10H19L12 3L5 10H9V16ZM5 18H19V20H5V18Z" fill="currentColor" />
+                        </svg>
+                        Upload Text File
+                        <input type="file" id="fileUpload" accept=".txt" hidden>
+                    </label>
+                </div>
+
+                <!-- Status bar -->
+                <div id="statusBar" class="status-bar" aria-live="polite"></div>
+
+            </div>
+
+            <!-- Right column: history -->
+            <div class="history-col">
+                <div class="history-header">
+                    <h2 class="history-title">History</h2>
+                </div>
+                <p class="history-sub">Recent Conversions</p>
+                <div id="historyList" class="history-list"></div>
+                <button id="clearHistoryBtn" class="btn btn-ghost clear-history-btn" aria-label="Clear history">
+                    <svg viewBox="0 0 24 24" fill="none" class="btn-icon">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+                            fill="currentColor" />
+                    </svg>
+                    Clear History
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>
